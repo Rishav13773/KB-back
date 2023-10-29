@@ -32,6 +32,24 @@ exports.createProject = async (req, res) => {
   }
 };
 
-exports.uploadDocuments = (req, res) => {
-  res.json("success");
+exports.getProject = (req, res) => {
+  console.log("start");
+  try {
+    const uid = req.params.id;
+    console.log(uid);
+    const user = User.findById(uid);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    Project.find({ projectid: uid })
+      .then((projects) => {
+        res.send(projects);
+      })
+      .catch((error) => {
+        res.status(500).json({ message: error.message });
+      });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
