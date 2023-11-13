@@ -32,7 +32,7 @@ exports.createProject = async (req, res) => {
   }
 };
 
-exports.getProject = (req, res) => {
+exports.getprojectbyid = (req, res) => {
   console.log("start");
   try {
     const uid = req.params.id;

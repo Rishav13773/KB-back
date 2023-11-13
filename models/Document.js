@@ -7,7 +7,7 @@ const documentSchema = mongoose.Schema({
     required: [true, "URL is required"],
   },
   projectId: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
     required: [true, "Project ID is required"],
   },

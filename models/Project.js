@@ -16,7 +16,8 @@ const projectSchema = mongoose.Schema(
       default: false,
     },
     projectid: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {
