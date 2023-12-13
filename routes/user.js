@@ -5,6 +5,7 @@ const {
   activateAccount,
   profileUpdate,
 } = require("../controllers/user");
+const { authUser } = require("../middlewares/auth");
 const router = express.Router();
 const { profilePicUpload } = require("../util/profilePicUpload");
 
