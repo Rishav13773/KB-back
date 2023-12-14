@@ -129,42 +129,42 @@ exports.login = async (req, res) => {
 };
 
 //Handling profile update request
-exports.profileUpdate = async (req, res) => {
-  console.log(req.body);
-  // console.log(req.headers["x-access-token"]);
-  try {
-    const { firstName, lastName, bio } = req.body;
-    const token = req.headers["x-access-token"];
-    const user = jwt.verify(token, process.env.TOKEN_SECRET);
-    if (!user) {
-      return res.status(400).json({ message: "Invalid account" });
-    }
-    // console.log('reached')
-    const profile = await User.findById(user.id);
-    if (!profile) {
-      return res.status(400).json({ message: "User does not exist" });
-    } else {
-      profile.firstName = firstName;
-      profile.lastName = lastName;
-      profile.details.bio = bio;
-      (profile.picture =
-        req.protocol + "://" + req.get("host") + "/temp/" + req.file.filename),
-        // If a profile picture was uploaded, update the picture path
-        await profile.save();
-    }
+// exports.profileUpdate = async (req, res) => {
+//   console.log(req.body);
+//   // console.log(req.headers["x-access-token"]);
+//   try {
+//     const { firstName, lastName, bio } = req.body;
+//     const token = req.headers["x-access-token"];
+//     const user = jwt.verify(token, process.env.TOKEN_SECRET);
+//     if (!user) {
+//       return res.status(400).json({ message: "Invalid account" });
+//     }
+//     // console.log('reached')
+//     const profile = await User.findById(user.id);
+//     if (!profile) {
+//       return res.status(400).json({ message: "User does not exist" });
+//     } else {
+//       profile.firstName = firstName;
+//       profile.lastName = lastName;
+//       profile.details.bio = bio;
+//       (profile.picture =
+//         req.protocol + "://" + req.get("host") + "/temp/" + req.file.filename),
+//         // If a profile picture was uploaded, update the picture path
+//         await profile.save();
+//     }
 
-    res.send({
-      id: user._id,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      picture: profile.picture,
-      details: profile.details,
-      token: token,
-      verified: profile.verified,
-      message: "profile updated successfully",
-    });
-    return;
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+//     res.send({
+//       id: user._id,
+//       firstName: profile.firstName,
+//       lastName: profile.lastName,
+//       picture: profile.picture,
+//       details: profile.details,
+//       token: token,
+//       verified: profile.verified,
+//       message: "profile updated successfully",
+//     });
+//     return;
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
