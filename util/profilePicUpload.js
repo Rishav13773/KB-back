@@ -34,63 +34,46 @@
 //     return upload;
 // }
 
-const express = require("express");
-const multer = require("multer");
-const path = require("path");
-const app = express();
-app.use('/temp', express.static(path.join(__dirname, 'temp')));
-
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const multer = require("multer");
+const User = require('../models/User'); // Update the path based on your actual User model location
 
-// Import your User model
-const User = require('../models/User'); // Update this line with the actual path to your User model
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-exports.profilePicUpload = () => {
-  cloudinary.config({
-            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-            api_key: process.env.CLOUDINARY_API_KEY,
-            api_secret: process.env.CLOUDINARY_API_SECRET,
-          });
+const fileFilter = (req, file, cb) => {
+    if (
+        file.mimetype === 'image/png' ||
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/jpeg'
+    ) {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
 
-    // Correct the property name to 'fileFilter'
-    const fileFilter = (req, file, cb) => {
-        if (
-            file.mimetype === 'image/png' ||
-            file.mimetype === 'image/jpg' ||
-            file.mimetype === 'image/jpeg'
-        ) {
-            cb(null, true);
-        } else {
-            cb(null, false);
-        }
-    };
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: "Profile_Picture",
+        resource_type: "auto",
+    },
+});
 
-    // Add 'limits' to handle file size limit
-    const storage = new CloudinaryStorage({
-        cloudinary,
-        params: {
-            folder: "Profile_pics",
-            resource_type: "auto",
-        },
-    });
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter,
+    limits: {
+        fileSize: 1024 * 1024 * 5, // 5 MB limit (adjust as needed)
+    },
+});
 
-    // Update 'filefilter' to 'fileFilter'
-    const upload = multer({
-        storage: storage,
-        fileFilter: fileFilter, // Corrected property name
-        limits: {
-            fileSize: 1024 * 1024 * 50, // 5 MB limit (adjust as needed)
-        },
-    });
-
-    return upload;
-}
-
-// Middleware for handling the profile update
-// app.post('/profile', profilePicUpload().single('picture'),
-
-exports.profileUpdate= async (req, res) => {
+const updateProfile = async (req, res) => {
     try {
         const { firstName, lastName, bio } = req.body;
         const picture = req.file;
@@ -116,4 +99,5 @@ exports.profileUpdate= async (req, res) => {
     }
 };
 
-module.exports = app;
+module.exports = { updateProfile, upload };
+
