@@ -36,7 +36,7 @@ exports.getprojectbyid = (req, res) => {
   console.log("start");
   try {
     const uid = req.params.id;
-    console.log(uid);
+    console.log("uid : ",uid);
     const user = User.findById(uid);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
