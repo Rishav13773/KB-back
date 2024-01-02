@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
 
-const projectSchema = mongoose.Schema(
+const projectSchema = new mongoose.Schema(
   {
     projectName: {
       type: String,
@@ -15,14 +14,23 @@ const projectSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    projectid: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "User", // Assuming there's a User model for the creator
+      required: [true, "Creator ID is required"],
     },
+    documents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Document",
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Project", projectSchema);
+const Project = mongoose.model("Project", projectSchema);
+
+module.exports = Project;

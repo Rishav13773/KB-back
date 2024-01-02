@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
 
-const documentSchema = mongoose.Schema({
+const documentSchema = new mongoose.Schema({
   url: {
     type: String,
     required: [true, "URL is required"],
   },
-  projectId: {
+  project: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
     required: [true, "Project ID is required"],
   },
 });
 
-mongoose.model("Document", documentSchema);
+const Document = mongoose.model("Document", documentSchema);
+
+module.exports = Document;
