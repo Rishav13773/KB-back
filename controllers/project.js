@@ -19,7 +19,7 @@ exports.createProject = async (req, res) => {
 
     console.log("reached");
     const newProject = await new Project({
-      // projectid: uid,
+      createdBy: uid,
       projectName,
       description,
       isPrivate,
@@ -45,8 +45,8 @@ exports.getprojectbyid = (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    Project.find({ projectid: uid })
+    // console.log("project Id: ", req.params )
+    Project.find({ createdBy: uid })
       .then((projects) => {
         res.send(projects);
       })
