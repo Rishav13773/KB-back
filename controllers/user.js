@@ -10,7 +10,7 @@ const { sendVerificationEmail } = require("../helpers/mailer");
 // takes care of form validation and registration to DB
 exports.register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { email, username, password } = req.body;
 
     if (!validateEmail(email)) {
       res.status(400).json({ message: "Invalid email" });
@@ -20,46 +20,43 @@ exports.register = async (req, res) => {
       res.status(400).json({ message: "email address already exists" });
     }
 
-    if (!validateLength(firstName, 3, 30)) {
-      return res.status(400).json({
-        message: "first name must between 3 and 30 characters.",
-      });
-    }
-    if (!validateLength(lastName, 3, 30)) {
-      return res.status(400).json({
-        message: "last name must between 3 and 30 characters.",
-      });
-    }
+    // if (!validateLength(firstName, 3, 30)) {
+    //   return res.status(400).json({
+    //     message: "first name must between 3 and 30 characters.",
+    //   });
+    // }
+    // if (!validateLength(lastName, 3, 30)) {
+    //   return res.status(400).json({
+    //     message: "last name must between 3 and 30 characters.",
+    //   });
+    // }
     if (!validateLength(password, 6, 40)) {
       return res.status(400).json({
         message: "password must be atleast 6 characters.",
       });
     }
 
-    const newUsername = generateUsername("-", 2, 20);
+    // const newUsername = generateUsername("-", 2, 20);
     const cryptedPassword = await bcrypt.hash(password, 12);
 
     //saving user credentials to database
     const user = await new User({
-      firstName,
-      lastName,
-      userName: newUsername,
       email,
+      username: username,
       password: cryptedPassword,
     }).save();
 
     //email verification
     const emailVerification = generateToken({ id: user._id.toString() }, "40m");
-    const url = `${process.env.BASE_URL}/activate/${emailVerification}`;
-    sendVerificationEmail(user.email, user.firstName, url);
+    // const url = `${process.env.BASE_URL}/activate/${emailVerification}`;
+    // sendVerificationEmail(user.email, user.firstName, url);
     const token = generateToken({ id: user._id.toString() }, "7d");
-    console.log("token :",token);
+    console.log("token :", token);
 
     return res.send({
       id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
       picture: user.picture,
+      username: user.username,
       token: token,
       details: user.details,
       verified: user.verified,
