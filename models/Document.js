@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const documentSchema = new mongoose.Schema({
-  url: {
-    type: String,
-    required: [true, "URL is required"],
+  urls: {
+    type: [String],
+    required: [true, "URLs are required"],
   },
   project: {
     type: mongoose.Schema.Types.ObjectId,
