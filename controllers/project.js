@@ -20,18 +20,10 @@ exports.createProject = async (req, res) => {
 
     console.log("reached");
     const newProject = await new Project({
-<<<<<<< HEAD
-      // projectid: uid,
-      projectName: projectName,
-      description: description,
-      isPrivate: isPrivate,
-      createdBy: uid,
-=======
       createdBy: uid,
       projectName,
       description,
       isPrivate,
->>>>>>> 3f811829154f12b4b995959a5d2cbafe714a3f77
     }).save();
 
     res.send({
