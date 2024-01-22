@@ -7,6 +7,7 @@ exports.createProject = async (req, res) => {
   try {
     const uid = req.user.id;
     console.log("user IDi", uid);
+    console.log(req.body);
 
     const { projectName, description, isPrivate } = req.body;
 
@@ -29,7 +30,6 @@ exports.createProject = async (req, res) => {
       project: newProject,
       message: "Project successfully created",
     });
-
   } catch (error) {
     console.error("Error creating project:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -40,7 +40,7 @@ exports.getprojectbyid = (req, res) => {
   console.log("start");
   try {
     const uid = req.params.id;
-    console.log("uid : ",uid);
+    console.log("uid : ", uid);
     const user = User.findById(uid);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
