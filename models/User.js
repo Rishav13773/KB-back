@@ -39,6 +39,10 @@ const userSchema = mongoose.Schema(
       default:
         "https://res.cloudinary.com/dmhcnhtng/image/upload/v1643044376/avatars/default_pic_jeaybr.png",
     },
+    phoneNo :{
+      type: Number,
+      require : [true, "Phone Number is Required"]
+    },
     verified: {
       type: Boolean,
       default: false,

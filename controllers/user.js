@@ -136,7 +136,7 @@ exports.updateEmail = async (req, res) => {
     const user = await User.findByIdAndUpdate(userId, {email : userEmail});
 
     res.json({message : 'User Email Updated Successfully', user : user});
-    
+
   }catch(error){
     console.log("error: ", error)
   }
@@ -147,7 +147,7 @@ exports.updatePhone = async (req, res) =>{
     const userId = res.body.id;
     const userPhone = res.body.phone;
 
-    const user = await User.findByIdAndUpdate(userId, {phone : userPhone});
+    const user = await User.findByIdAndUpdate(userId, {phoneNo : userPhone});
 
     res.json({message : 'User Phone NUmber Updated Successfully', user : user});
 
