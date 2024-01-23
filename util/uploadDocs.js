@@ -15,7 +15,8 @@ const storage = new CloudinaryStorage({
   params: (req, file) => {
     // console.log("params in stroage",params)
     // console.log("in storage function: ", file);
-    const userName = req.body.userName;
+    const userName = req.body.username;
+    console.log(req.body.username);
     let folder;
 
     if (file.mimetype.startsWith("image/")) {

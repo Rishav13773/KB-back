@@ -112,8 +112,7 @@ exports.login = async (req, res) => {
     const token = generateToken({ id: user._id.toString() }, "7d");
     res.send({
       id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      username: user.username,
       picture: user.picture,
       details: user.details,
       token: token,
@@ -126,29 +125,27 @@ exports.login = async (req, res) => {
 };
 
 exports.updateEmail = async (req, res) => {
-  try{
+  try {
     const userId = req.body.id;
     const userEmail = req.body.email;
-    
-    const user = await User.findByIdAndUpdate(userId, {email : userEmail});
 
-    res.json({message : 'User Email Updated Successfully', user : user});
+    const user = await User.findByIdAndUpdate(userId, { email: userEmail });
 
-  }catch(error){
-    console.log("error: ", error)
+    res.json({ message: "User Email Updated Successfully", user: user });
+  } catch (error) {
+    console.log("error: ", error);
   }
-}
+};
 
-exports.updatePhone = async (req, res) =>{
-  try{
+exports.updatePhone = async (req, res) => {
+  try {
     const userId = res.body.id;
     const userPhone = res.body.phone;
 
-    const user = await User.findByIdAndUpdate(userId, {phoneNo : userPhone});
+    const user = await User.findByIdAndUpdate(userId, { phoneNo: userPhone });
 
-    res.json({message : 'User Phone NUmber Updated Successfully', user : user});
-
-  }catch(error){
-    console.log("Error Occurred: ", error)
+    res.json({ message: "User Phone NUmber Updated Successfully", user: user });
+  } catch (error) {
+    console.log("Error Occurred: ", error);
   }
-}
+};
