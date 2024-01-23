@@ -127,7 +127,7 @@ exports.login = async (req, res) => {
 
 exports.updateEmail = async (req, res) => {
   try{
-    const userId = req.body.id;
+    const userId = req.params.id;
     const userEmail = req.body.email;
     
     const user = await User.findByIdAndUpdate(userId, {email : userEmail});
@@ -141,7 +141,7 @@ exports.updateEmail = async (req, res) => {
 
 exports.updatePhone = async (req, res) =>{
   try{
-    const userId = res.body.id;
+    const userId = res.params.id;
     const userPhone = res.body.phone;
 
     const user = await User.findByIdAndUpdate(userId, {phoneNo : userPhone});
