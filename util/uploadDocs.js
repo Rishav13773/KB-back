@@ -10,12 +10,18 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const setUserInRequest = (req) => {
+  req.userName = req.body.username; // Assuming the username is available in req.body
+  console.log("in set User in Request fuction: ", req.userName)
+  console.log("in set User in Request body fuction: ", req.body.username)
+  return req.userName;
+};
+
 const storage = new CloudinaryStorage({
   cloudinary,
   params: (req, file) => {
-    // console.log("params in stroage",params)
-    // console.log("in storage function: ", file);
-    const userName = req.body.userName;
+    const userName = setUserInRequest(req); 
+    console.log("in cloudinaryStroage username",userName);
     let folder;
 
     if (file.mimetype.startsWith("image/")) {
@@ -52,6 +58,7 @@ const upload = multer({
 });
 
 const uploadFile = async (req, res) => {
+  console.log("in uploadFiles Function username req.userName: ", req.body.username);
   try {
     // console.log("in upload function, before getting files ");
 
@@ -137,4 +144,4 @@ const uploadFile = async (req, res) => {
   }
 };
 
-module.exports = { uploadFile, upload };
+module.exports = { uploadFile, upload, setUserInRequest };

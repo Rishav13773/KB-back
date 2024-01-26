@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Project = require("../models/Project");
+const Document = require("../models/Document");
 // const generateUniqueId = require("generate-unique-id");
 
 exports.createProject = async (req, res) => {
@@ -37,7 +38,7 @@ exports.createProject = async (req, res) => {
 };
 
 exports.getprojectbyid = (req, res) => {
-  console.log("start");
+  // console.log("start");
   try {
     const uid = req.params.id;
     console.log("uid : ", uid);
@@ -49,6 +50,25 @@ exports.getprojectbyid = (req, res) => {
     Project.find({ createdBy: uid })
       .then((projects) => {
         res.send(projects);
+      })
+      .catch((error) => {
+        res.status(500).json({ message: error.message });
+      });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getdocumentByPid = (req, res) => {
+  console.log("Started");
+  try {
+    const pid = req.params.id;
+    console.log(pid);
+
+    Document.find({ project: pid })
+      .then((docs) => {
+        console.log(docs);
+        res.send(docs);
       })
       .catch((error) => {
         res.status(500).json({ message: error.message });
