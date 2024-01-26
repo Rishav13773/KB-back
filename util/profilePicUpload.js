@@ -47,7 +47,8 @@ const upload = multer({
 
 const updateProfile = async (req, res) => {
     try {
-        const { userId, firstName, lastName, bio } = req.body;
+        const userId = req.params.id;
+        const {  userName, firstName, lastName, bio } = req.body;
         const picture = req.file;
         
         console.log("userId: ", userId);
@@ -70,6 +71,7 @@ const updateProfile = async (req, res) => {
         }
         console.log("user.picture: ", user.picture)
 
+        user.username = userName;
         user.firstName = firstName;
         user.lastName = lastName;
         user.details.bio = bio;
