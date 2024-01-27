@@ -17,7 +17,7 @@ readdirSync("./routes").map((r) => app.use("/", require("./routes/" + r)));
 //connecting DB
 mongoose
   .connect(process.env.DATABASE_URL, {
-    dbName: "Base-local", //Comment the db name to connect to online DB
+    dbName: "Base-local",
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
