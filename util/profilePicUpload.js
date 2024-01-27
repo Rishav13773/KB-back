@@ -28,6 +28,8 @@ const storage = new CloudinaryStorage({
     params:(req, file)=> { 
         const userName = req.body.firstName; // need to change to the userName for test using the first name of user
         const subfolder = 'Profile_Pics'
+
+        console.log("in stroage function, file: ", file)
        return  {
         folder: `${userName}/${subfolder}`,
         resource_type: "auto",
@@ -48,10 +50,10 @@ const upload = multer({
 const updateProfile = async (req, res) => {
     try {
         const userId = req.params.id;
-        const {  userName, firstName, lastName, bio } = req.body;
+        const {  username, firstName, lastName, bio } = req.body;
         const picture = req.file;
         
-        console.log("userId: ", userId);
+        // console.log("userId: ", userId);
         console.log("picture: ", picture);
 
         console.log(req.body);  // Log the form data
@@ -71,7 +73,7 @@ const updateProfile = async (req, res) => {
         }
         console.log("user.picture: ", user.picture)
 
-        user.username = userName;
+        user.username = username;
         user.firstName = firstName;
         user.lastName = lastName;
         user.details.bio = bio;
