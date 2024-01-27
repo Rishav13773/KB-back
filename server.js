@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use('/temp', express.static('temp'));
+app.use("/temp", express.static("temp"));
 
 //setting routes
 readdirSync("./routes").map((r) => app.use("/", require("./routes/" + r)));
@@ -17,7 +17,9 @@ readdirSync("./routes").map((r) => app.use("/", require("./routes/" + r)));
 //connecting DB
 mongoose
   .connect(process.env.DATABASE_URL, {
+    dbName: "Base-local", //Comment the db name to connect to online DB
     useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
   .then(() => console.log("Database connected succesfully"))
   .catch((err) => console.log("Error connecting to database", err));

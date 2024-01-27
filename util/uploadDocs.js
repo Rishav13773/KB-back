@@ -16,7 +16,7 @@ const storage = new CloudinaryStorage({
     // console.log("params in stroage",params)
     // console.log("in storage function: ", file);
     const userName = req.body.username;
-    console.log(req.body.username);
+    // console.log(req.body.username);
     let folder;
 
     if (file.mimetype.startsWith("image/")) {
@@ -28,14 +28,14 @@ const storage = new CloudinaryStorage({
     } else {
       folder = "Miscellaneous";
     }
-    console.log(
-      "return : ",
-      `${userName}/${folder}`,
-      " ",
-      file.mimetype.startsWith("video/") ? "video" : "auto",
-      " ",
-      file.originalname.replace(/\.[^/.]+$/, "")
-    );
+    // console.log(
+    //   "return : ",
+    //   `${userName}/${folder}`,
+    //   " ",
+    //   file.mimetype.startsWith("video/") ? "video" : "auto",
+    //   " ",
+    //   file.originalname.replace(/\.[^/.]+$/, "")
+    // );
 
     return {
       folder: `${userName}/${folder}`,
@@ -103,9 +103,14 @@ const uploadFile = async (req, res) => {
 
     // console.log("results: ", results);
 
-    const urls = results.map((result) => result.secure_url);
+    const urls = results.map((result) => ({
+      url: result.secure_url,
+      size: result.bytes,
+      format: result.format,
+      fileName: result.original_filename,
+    }));
 
-    // console.log("urls: ", urls);
+    console.log("urls: ", urls);
 
     const existingDocument = await Document.findOne({ project: projectId });
 
