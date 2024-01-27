@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 
-const { uploadFile, upload } = require("../util/uploadDocs");
+const { uploadFile, upload, setUserInRequest } = require("../util/uploadDocs");
 const {
   getprojectbyid,
   createProject,
@@ -16,7 +16,7 @@ const multerMiddleware = multer().none(); //It will make the parsed form fields 
 router.post("/createProject", authUser, multerMiddleware, createProject);
 // router.post("/docs", upload.array("files"), uploadDocuments);
 router.get("/getprojectbyid/:id", getprojectbyid);
-router.post("/upload-to-cloudinary/:id", upload.array("files"), uploadFile);
+router.post("/upload-to-cloudinary/:id",  upload.array("files"), uploadFile);
 router.get("/getdocumentByPid/:id", getdocumentByPid);
 
 module.exports = router;

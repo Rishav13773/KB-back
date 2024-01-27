@@ -126,8 +126,12 @@ exports.login = async (req, res) => {
 
 exports.updateEmail = async (req, res) => {
   try {
-    const userId = req.body.id;
+    console.log("in update Email")
+
+    const userId = req.params.id;
     const userEmail = req.body.email;
+    console.log("email: ", req.body.email);
+    console.log("userEmail: ", userEmail)
 
     const user = await User.findByIdAndUpdate(userId, { email: userEmail });
 
@@ -139,8 +143,10 @@ exports.updateEmail = async (req, res) => {
 
 exports.updatePhone = async (req, res) => {
   try {
-    const userId = res.body.id;
-    const userPhone = res.body.phone;
+    console.log("in update Phone")
+    const userId = req.params.id;
+    const userPhone = req.body.phone;
+    console.log("phone : ", req.body.phone)
 
     const user = await User.findByIdAndUpdate(userId, { phoneNo: userPhone });
 

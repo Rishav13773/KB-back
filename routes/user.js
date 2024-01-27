@@ -14,9 +14,9 @@ router.post("/login", login);
 router.post("/activate", activateAccount);
 
 // Use 'upload' middleware for handling file upload
-router.post('/profile', upload.single('picture'), updateProfile);
+router.post('/profile/:id', upload.single('file'), updateProfile);
 router.get('/profile/:id', getUserProfileById )
-router.put('/updateEmail', updateEmail)
-router.put('/updatePhone', updatePhone)
+router.put('/updateEmail/:id', updateEmail)
+router.put('/updatePhone/:id', updatePhone)
 
 module.exports = router;
