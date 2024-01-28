@@ -55,6 +55,7 @@ exports.register = async (req, res) => {
 
     return res.send({
       id: user._id,
+      email: user.email,
       picture: user.picture,
       username: user.username,
       token: token,
@@ -112,6 +113,7 @@ exports.login = async (req, res) => {
     const token = generateToken({ id: user._id.toString() }, "7d");
     res.send({
       id: user._id,
+      email: user.email,
       username: user.username,
       picture: user.picture,
       details: user.details,
@@ -126,12 +128,12 @@ exports.login = async (req, res) => {
 
 exports.updateEmail = async (req, res) => {
   try {
-    console.log("in update Email")
+    console.log("in update Email");
 
     const userId = req.params.id;
     const userEmail = req.body.email;
     console.log("email: ", req.body.email);
-    console.log("userEmail: ", userEmail)
+    console.log("userEmail: ", userEmail);
 
     const user = await User.findByIdAndUpdate(userId, { email: userEmail });
 
@@ -143,10 +145,10 @@ exports.updateEmail = async (req, res) => {
 
 exports.updatePhone = async (req, res) => {
   try {
-    console.log("in update Phone")
+    console.log("in update Phone");
     const userId = req.params.id;
     const userPhone = req.body.phone;
-    console.log("phone : ", req.body.phone)
+    console.log("phone : ", req.body.phone);
 
     const user = await User.findByIdAndUpdate(userId, { phoneNo: userPhone });
 
