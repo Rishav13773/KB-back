@@ -53,7 +53,8 @@ const updateProfile = async (req, res) => {
     const { username, firstName, lastName, bio } = req.body;
     const picture = req.file;
 
-    // console.log("userId: ", userId);
+    console.log("req.file: ", req.file);
+    console.log("userId: ", userId);
     console.log("picture: ", picture);
 
     console.log(req.body); // Log the form data
@@ -92,6 +93,7 @@ const updateProfile = async (req, res) => {
       details: user.details,
       token: token,
       verified: user.verified,
+      phoneNo:user.phoneNo,
       message: "Profile updated successfully",
     });
   } catch (error) {
