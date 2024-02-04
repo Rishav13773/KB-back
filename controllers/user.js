@@ -47,7 +47,7 @@ exports.register = async (req, res) => {
     }).save();
 
     //email verification
-    const emailVerification = generateToken({ id: user._id.toString() }, "40m");
+    // const emailVerification = generateToken({ id: user._id.toString() }, "40m");
     // const url = `${process.env.BASE_URL}/activate/${emailVerification}`;
     // sendVerificationEmail(user.email, user.firstName, url);
     const token = generateToken({ id: user._id.toString() }, "7d");

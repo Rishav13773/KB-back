@@ -14,6 +14,10 @@ const projectSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    trash: {
+      type: Boolean,
+      default: false,
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Assuming there's a User model for the creator
