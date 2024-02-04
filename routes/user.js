@@ -7,6 +7,7 @@ const {
   updatePhone,
   getAllUsers,
   sendFriendRequest,
+  resposeToRequest
 } = require("../controllers/user");
 const {  upload, updateProfile, getUserProfileById } = require('../util/profilePicUpload');
 const router = express.Router();
@@ -22,5 +23,6 @@ router.get('/profile/:id', getUserProfileById )
 router.put('/updateEmail/:id', updateEmail)
 router.put('/updatePhone/:id', updatePhone)
 router.post('/sendfrindrequest', sendFriendRequest)
+router.post('/responsetorequest',resposeToRequest)
 
 module.exports = router;

@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const { generateToken } = require("../helpers/tokens");
 const { sendVerificationEmail } = require("../helpers/mailer");
+const { response } = require("express");
+const { request } = require("http");
 
 // takes care of form validation and registration to DB
 exports.register = async (req, res) => {
@@ -179,31 +181,25 @@ exports.updatePhone = async (req, res) => {
 
 exports.sendFriendRequest = async (req, res) => {
   try {
-    console.log(req.body);
+
     const { senderId, recipientId } = req.body;
 
-    console.log("req.body: ", req.body);
-
-    console.log("sender id :", senderId)
-    console.log("recipient id :", recipientId)
     // Senders 
     const sender = await User.findById(senderId);
 
     if (!sender) {
-      return res.status(400).json({ message: "Sender user not found in records" });
+      return res.status(400).json({ error: "Sender user not found in records" });
     }
 
-    if (sender.friendRequests.some(request => request.sender.equals(senderId))) {
+    if (sender.friendRequests.some(request => request.sender.equals(recipientId))) {
       return res.status(400).json({ error: "Friend request already sent" });
     }
-
-    sender.friendRequests.push({ sender: senderId, status: 'pending' });
 
     // Recipients
     const recipient = await User.findById(recipientId);
 
     if (!recipient) {
-      return res.status(400).json({ message: "Recipient user not found in records" });
+      return res.status(400).json({ error: "Recipient user not found in records" });
     }
 
     
@@ -211,6 +207,8 @@ exports.sendFriendRequest = async (req, res) => {
       return res.status(400).json({ error: "Friend request already sent" });
     }
 
+    sender.friendRequests.push({ sender: recipientId, status: 'pending' });
+    
     recipient.friendRequests.push({ sender: senderId, status: 'pending' });
 
     await sender.save();
@@ -222,3 +220,87 @@ exports.sendFriendRequest = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.resposeToRequest = async (req, res) => {
+  try{
+
+    const { responderId, senderId, accept} = req.body;
+    
+    
+    // console.log("responder id: ", responderId);
+    // console.log("sender id: ", senderId);
+    // console.log("accept id: ", accept);
+    
+    // RESPONDER POV
+    // Finding the Responder User 
+    // console.log("Working on the responder DB")
+    const responder = await User.findById(responderId);
+
+    if(!responder){
+      return res.status(400).json({error : 'Responder not found in record'})
+    }
+
+    // Finding the sender in the friend request array
+    const senderInFriendReq = responder.friendRequests.find(request =>{
+    return request.sender.equals(senderId)});
+      
+    if(!senderInFriendReq){
+      return res.status(400).json({error: 'Sender not found in friend request'})
+    }
+
+     // Update the status based on the response
+     senderInFriendReq.status = accept ? 'accepted' : 'rejected';
+
+     if (accept) {
+       // Add the friend to the responder user's friends array
+       responder.friends.push(senderInFriendReq.sender);
+       // Remove the friend request from the responder friend request array
+       responder.friendRequests.pop({ sender: senderId});
+     }
+
+     // Save changes to the user's document
+     await responder.save()
+
+
+    //  SENDER POV
+    // Finding sender 
+
+    // console.log("Working on the sender DB")
+    const senderUser = await User.findById(senderId);
+
+    if(!senderUser){
+      // console.log('Sender not found in record')
+      return res.status(400).json({error : 'Sender not found in record'})
+    }
+
+    // finding responder in the sender frined requst array
+    const responderInFriendReq = senderUser.friendRequests.find(request=>{
+      console.log("responder in sender fr: ", request.sender.equals(responderId));
+      return request.sender.equals(responderId);
+    })
+
+    if(!responderInFriendReq){
+      // console.log('Responder Not found in the FR ');
+      res.status(400).json({error: 'Responder Not found in the FR '});
+    }
+
+    // Updating status in the sender Friend request array
+    responderInFriendReq.status = accept ? 'accepted' : 'rejected';
+
+    if(accept){
+      // Add the friend to the sender user's friends array
+      senderUser.friends.push(responderInFriendReq.sender);
+      // Remove the friend request from the sender user's friend request array
+      senderUser.friendRequests.pop({sender :responderId});
+    }
+
+    await senderUser.save();
+
+
+     res.json({ success: true, message: 'Friend request response processed successfully' });
+
+  }catch(error){
+    console.log("Error Message: ", error.message, "Error :", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
