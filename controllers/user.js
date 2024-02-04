@@ -115,10 +115,13 @@ exports.login = async (req, res) => {
       id: user._id,
       email: user.email,
       username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
       picture: user.picture,
       details: user.details,
       token: token,
       verified: user.verified,
+      phoneNo:user.phoneNo,
       message: "Login successful",
     });
   } catch (error) {
