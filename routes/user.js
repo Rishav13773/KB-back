@@ -5,6 +5,7 @@ const {
   activateAccount,
   updateEmail,
   updatePhone,
+  getAllUsers,
 } = require("../controllers/user");
 const {  upload, updateProfile, getUserProfileById } = require('../util/profilePicUpload');
 const router = express.Router();
@@ -12,6 +13,7 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 router.post("/activate", activateAccount);
+router.get("/getusers", getAllUsers);
 
 // Use 'upload' middleware for handling file upload
 router.post('/profile/:id', upload.single('picture'), updateProfile);
