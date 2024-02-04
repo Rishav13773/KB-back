@@ -178,33 +178,47 @@ exports.updatePhone = async (req, res) => {
 
 
 exports.sendFriendRequest = async (req, res) => {
-  try{
-    const {senderId, recipientId} = req.body;
+  try {
+    console.log(req.body);
+    const { senderId, recipientId } = req.body;
 
-    const sender = User.findById(senderId);
+    console.log("req.body: ", req.body);
 
-    if(!sender){
-      res.status(400).json({message:"Sender user not found in records"})
+    console.log("sender id :", senderId)
+    console.log("recipient id :", recipientId)
+    // Senders 
+    const sender = await User.findById(senderId);
+
+    if (!sender) {
+      return res.status(400).json({ message: "Sender user not found in records" });
     }
 
-    const recipient = User.findById(recipientId);
-
-    if(!recipient){
-      res.status(400).json({message:"Recipient user not found in records"})
+    if (sender.friendRequests.some(request => request.sender.equals(senderId))) {
+      return res.status(400).json({ error: "Friend request already sent" });
     }
 
-    if(user.friendRequests.some(request => request.sender.equals(recipientId ))){
-      return res.status(400).json({error : "Friend request already sent"})
+    sender.friendRequests.push({ sender: senderId, status: 'pending' });
+
+    // Recipients
+    const recipient = await User.findById(recipientId);
+
+    if (!recipient) {
+      return res.status(400).json({ message: "Recipient user not found in records" });
     }
 
-    user.friendRequests.push({sender: senderId, status:'pending'});
+    
+    if (recipient.friendRequests.some(request => request.sender.equals(senderId))) {
+      return res.status(400).json({ error: "Friend request already sent" });
+    }
 
-    await user.save();
+    recipient.friendRequests.push({ sender: senderId, status: 'pending' });
 
-    res.json({success: true, message:'Friend Request sent Successfully'})
+    await sender.save();
+    await recipient.save();
 
-  }catch(error){
-    console.log("Error Message: ",error.message, "Error :",error);
-    res.status(500).json({message:"Internal Server Error"})
+    res.json({ success: true, message: 'Friend Request sent Successfully' });
+  } catch (error) {
+    console.log("Error Message: ", error.message, "Error :", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
