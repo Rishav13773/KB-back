@@ -18,17 +18,15 @@ const projectSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    starred: {
+      type: Boolean,
+      default: false,
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Assuming there's a User model for the creator
       required: [true, "Creator ID is required"],
     },
-    documents: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Document",
-      },
-    ],
   },
   {
     timestamps: true,
