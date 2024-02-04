@@ -43,6 +43,21 @@ const userSchema = mongoose.Schema(
       type: Number,
       require : [true, "Phone Number is Required"]
     },
+    friendRequests: [{
+      sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      status: {
+        type: String,
+        enum: ['pending', 'accepted', 'rejected'],
+        default: 'pending',
+      },
+    }],
+    friends: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
     verified: {
       type: Boolean,
       default: false,

@@ -129,6 +129,21 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.getAllUsers = async (req, res) =>{
+  try{
+    const users =await User.find({});
+    
+    if(!users){
+      return res.status(400).json({message: "No User Found"})
+    }
+
+    res.json({users:users, message:"Users found"})
+  }catch(error){
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 exports.updateEmail = async (req, res) => {
   try {
     console.log("in update Email");
@@ -158,5 +173,52 @@ exports.updatePhone = async (req, res) => {
     res.json({ message: "User Phone NUmber Updated Successfully", user: user });
   } catch (error) {
     console.log("Error Occurred: ", error);
+  }
+};
+
+
+exports.sendFriendRequest = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { senderId, recipientId } = req.body;
+
+    console.log("req.body: ", req.body);
+
+    console.log("sender id :", senderId)
+    console.log("recipient id :", recipientId)
+    // Senders 
+    const sender = await User.findById(senderId);
+
+    if (!sender) {
+      return res.status(400).json({ message: "Sender user not found in records" });
+    }
+
+    if (sender.friendRequests.some(request => request.sender.equals(senderId))) {
+      return res.status(400).json({ error: "Friend request already sent" });
+    }
+
+    sender.friendRequests.push({ sender: senderId, status: 'pending' });
+
+    // Recipients
+    const recipient = await User.findById(recipientId);
+
+    if (!recipient) {
+      return res.status(400).json({ message: "Recipient user not found in records" });
+    }
+
+    
+    if (recipient.friendRequests.some(request => request.sender.equals(senderId))) {
+      return res.status(400).json({ error: "Friend request already sent" });
+    }
+
+    recipient.friendRequests.push({ sender: senderId, status: 'pending' });
+
+    await sender.save();
+    await recipient.save();
+
+    res.json({ success: true, message: 'Friend Request sent Successfully' });
+  } catch (error) {
+    console.log("Error Message: ", error.message, "Error :", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
