@@ -10,6 +10,7 @@ const {
   trashProject,
   restoreProject,
   deletProject,
+  starredProject,
 } = require("../controllers/project");
 const { authUser } = require("../middlewares/auth");
 
@@ -24,5 +25,6 @@ router.get("/getdocumentByPid/:id", getdocumentByPid);
 router.put("/trashProject/:id", trashProject);
 router.put("/restoreProject/:id", restoreProject);
 router.delete("/deletProject/:id", deletProject);
+router.put("/starredProject/:id", starredProject);
 
 module.exports = router;

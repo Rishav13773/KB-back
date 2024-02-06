@@ -141,3 +141,16 @@ exports.deletProject = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.starredProject = async (req, res) => {
+  try {
+    const pid = req.params.id;
+    const state = req.body.star;
+
+    const starred = await Project.findByIdAndUpdate(pid, { starred: state });
+
+    res.json({ message: "Project Starred successfully", project: starred });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
