@@ -304,3 +304,32 @@ exports.resposeToRequest = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
+exports.getAllFriends = async (req, res) =>{
+  try{
+    const userId = req.params.id;
+    // console.log("userID: ", userId)
+    
+    const user = await User.findById(userId).populate('friends', 'username details.bio firstName lastName picture');;
+
+    if(!user){
+      res.status(400).json({error : "User not found in records"})
+    }
+    // console.log("user: ", user)
+
+    const friends = user.friends.map(friend => ({
+      id: friend._id,
+      username: friend.username,
+      bio: friend.details.bio,
+      firstName: friend.firstName,
+      lastName: friend.lastName,
+      picture: friend.picture,
+    }));
+
+    // console.log("friends: ", friends)
+    res.json({friends: friends ,success : true, message : "All friends of user found"})
+  }catch(error){
+    console.log("Error Message: ", error.message, "Error :", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
